@@ -1,23 +1,24 @@
-var fs = require('fs');
+'use strict';
+const chalk = require('chalk');
+const fs = require('fs');
+
+var pwd = () => process.stdout.write(process.cwd());
+
+var ls = () => {
+  fs.readdir('.', function(err, files) {
+    if (err) throw err;
+    process.stdout.write(files.join('\n'));
+});
+};
+
+var date = () => process.stdout.write(chalk.magenta(Date()));
+
+// var echo = function(args) {
+//   console.log(args.join(' '));
+// }
 
 module.exports = {
-  pwd: function() {
-    console.log(process.cwd());
-  },
-  ls: function() {
-    fs.readdir('.', function(err, files) {
-      if (err) throw err;
-      files.forEach(function(file) {
-        process.stdout.write(file.toString() + '\n');
-      })
-      });
-  },
-  date: function() {
-    var date = new Date(); // needs to be formatted
-    return date.toISOString();
-  },
-  echo: function(args) {
-    console.log(args.join(' '));
-  }
+  pwd: pwd,
+  date: date,
+  ls: ls
 }
-

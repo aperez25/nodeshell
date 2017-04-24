@@ -1,18 +1,15 @@
-var cmds = require('./command.js');
-
+const ourCommands = require('./command.js');
+const chalk = require('chalk');
+const prompt = chalk.blue('\nprompt > ');
 // Output a prompt
-process.stdout.write('prompt > ');
+process.stdout.write(prompt);
 
 // The stdin 'data' event fires after a user types in a line
 //pwd function
 process.stdin.on('data', function (data) {
-  var args = data.toString().trim().split(' ');
-  var cmd = args[0];  // remove the newline
-  args = args.slice(1);
-  if (cmd === 'pwd') cmds.pwd(args);
-  if (cmd === 'ls') cmds.ls(args);
-  if (cmd === 'echo') cmds.echo(args);
-  if (cmd === 'date') console.log(cmds.date());
+  const cmd = data.toString().trim().split(' ');
+  if (ourCommands[cmd]) ourCommands[cmd]();
+  else process.stderr.write(chalk.red('command not found: ') + cmd);
   // process.stdout.write('You typed: ' + cmd);
-  setTimeout(function() {process.stdout.write('\nprompt > ')}, 0);
+  setTimeout(function() {process.stdout.write(prompt)}, 0);
 });
