@@ -1,24 +1,30 @@
 'use strict';
-const chalk = require('chalk');
 const fs = require('fs');
 
-var pwd = () => process.stdout.write(process.cwd());
+var pwd = (args, done) => done(process.cwd());
 
-var ls = () => {
+var ls = (args, done) => {
   fs.readdir('.', function(err, files) {
     if (err) throw err;
-    process.stdout.write(files.join('\n'));
+    done(files.join('\n'));
 });
-};
+}
 
-var date = () => process.stdout.write(chalk.magenta(Date()));
+var echo = (args, done) => {
+  const output = args
+  .split(' ')
+  .map(function(arg){
+    return (arg[0] === '$') ? process.env[arg.slice(1)] : arg;
+  })
+  .join(' ');
+  done(output);
+}
 
-// var echo = function(args) {
-//   console.log(args.join(' '));
-// }
+var date = (args, done) => done(chalk.magenta(Date()));
 
 module.exports = {
   pwd: pwd,
   date: date,
-  ls: ls
+  ls: ls,
+  echo: echo
 }
